@@ -64,7 +64,7 @@ public class CardLayoutFrame extends JFrame {
         //2. inner username input panel
         JPanel usernameButtonPanel = new JPanel(new FlowLayout());
         inputField = new JTextField("Enter a username"); // add an inputField to the inner panel
-        inputField.setFont(new Font("Arial", Font.PLAIN, 24));
+        inputField.setFont(new Font("Arial", Font.PLAIN, 20));
         usernameButtonPanel.add(inputField);
         usernameButton = new JButton("Save the name"); // add a button to the inner panel
         usernameButtonPanel.add(usernameButton);
@@ -88,7 +88,7 @@ public class CardLayoutFrame extends JFrame {
     private void createGamePanel() {
         gamePanel = new JPanel(new BorderLayout());
         questionLabel = new JLabel("Question #1", SwingConstants.CENTER);
-        questionLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 20));
         gamePanel.add(questionLabel, BorderLayout.NORTH);
         // gamePanel.add(new JLabel("Quiz Screen"));
         nextButton = new JButton("Go to results");
@@ -172,18 +172,18 @@ public class CardLayoutFrame extends JFrame {
         correctAnswers.add(1);
         questionPair.add(List.of("Question 4: Who won the baseball World Series in 2025?", "Toronto Blue Jays", "New York Yankees", "Los Angeles Dodgers", "Texas Rangers"));
         correctAnswers.add(2);
-        questionPair.add(List.of("Question 5: Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
+        questionPair.add(List.of("Question 5: In American football, how many points is a field goal worth?", "7", "6", "10", "5"));
         correctAnswers.add(1);
-        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
-        correctAnswers.add(1);
+        questionPair.add(List.of("Question 6: How many holes are played in a standard round of golf?", "9", "12", "18", "24"));
+        correctAnswers.add(2);
+        questionPair.add(List.of("Question 7: How many players are on a volleyball team?", "6", "4", "8", "5"));
+        correctAnswers.add(0);
+        questionPair.add(List.of("Question 8: Who has the most amount of gold medals in the Olympics?", "Lebron James", "Usain Bolt", "Lional Messi", "Michael Phelps"));
+        correctAnswers.add(3);
+        questionPair.add(List.of("Question 9: How many outs are there in baseball?", "3", "1", "4", "5"));
+        correctAnswers.add(0);
+        questionPair.add(List.of("Question 10: How long is a soccer game in minutes", "60", "120", "90", "100"));
+        correctAnswers.add(2);
     }
 
     private void loadNextQuestions() {
