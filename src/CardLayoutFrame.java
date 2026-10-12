@@ -88,7 +88,7 @@ public class CardLayoutFrame extends JFrame {
     private void createGamePanel() {
         gamePanel = new JPanel(new BorderLayout());
         questionLabel = new JLabel("Question #1", SwingConstants.CENTER);
-        questionLabel.setFont(new Font("Arial", Font.BOLD, 32));
+        questionLabel.setFont(new Font("Arial", Font.BOLD, 24));
         gamePanel.add(questionLabel, BorderLayout.NORTH);
         // gamePanel.add(new JLabel("Quiz Screen"));
         nextButton = new JButton("Go to results");
@@ -164,14 +164,24 @@ public class CardLayoutFrame extends JFrame {
     private void importQuestions() {
         questionPair = new ArrayList<>();
         correctAnswers = new ArrayList<>();
-        questionPair.add(List.of("Question 1: What is the square root of 225", "7.5", "5", "15", "25"));
-        correctAnswers.add(2);
-        questionPair.add(List.of("Which class belongs to Java Swing?", "NumberFormatException", "String", "Graphics", "None of above"));
-        correctAnswers.add(3);
-        questionPair.add(List.of("What is the capital of France?", "Paris", "London", "Berlin", "Rome"));
+        questionPair.add(List.of("Question 1: Which country won the 2026 FIFA World Cup?", "Spain", "Argentina", "Brazil", "France"));
         correctAnswers.add(0);
-        questionPair.add(List.of("Which planet is known as the Red Planet?", "Earth", "Venus", "Mars", "Jupiter"));
+        questionPair.add(List.of("Question 2: How many players make up a basketball team?", "10", "4", "7", "5"));
+        correctAnswers.add(3);
+        questionPair.add(List.of("Question 3: How long is a marathon?", "24.2 miles", "26.2 miles", "20 miles", "25 miles"));
+        correctAnswers.add(1);
+        questionPair.add(List.of("Question 4: Who won the baseball World Series in 2025?", "Toronto Blue Jays", "New York Yankees", "Los Angeles Dodgers", "Texas Rangers"));
         correctAnswers.add(2);
+        questionPair.add(List.of("Question 5: Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
+        correctAnswers.add(1);
+        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
+        correctAnswers.add(1);
+        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
+        correctAnswers.add(1);
+        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
+        correctAnswers.add(1);
+        questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
+        correctAnswers.add(1);
         questionPair.add(List.of("Recursion always needs a?", "Loop", "Base Case", "Queue", "Stack"));
         correctAnswers.add(1);
     }
