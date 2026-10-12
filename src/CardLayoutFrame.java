@@ -186,9 +186,9 @@ public class CardLayoutFrame extends JFrame {
         correctAnswers.add(2);
 
         questionPair.add(List.of("Question 1: What is 12x12?", "12", "144", "122", "132"));
-        correctAnswers.add(2);
+        correctAnswers.add(1);
         questionPair.add(List.of("Question 2: What is 6x7?", "42", "46", "48", "56"));
-        correctAnswers.add(3);
+        correctAnswers.add(0);
         questionPair.add(List.of("Question 3: What is the solution to 3x+6=21?", "x=4", "x=3", "x=5", "x=6"));
         correctAnswers.add(2);
         questionPair.add(List.of("Question 4: What is the derivative of 2x+1?", "2x", "1", "2x^2", "2"));
