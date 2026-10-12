@@ -184,6 +184,27 @@ public class CardLayoutFrame extends JFrame {
         correctAnswers.add(0);
         questionPair.add(List.of("Question 10: How long is a soccer game in minutes", "60", "120", "90", "100"));
         correctAnswers.add(2);
+
+        questionPair.add(List.of("Question 1: What is 12x12?", "12", "144", "122", "132"));
+        correctAnswers.add(2);
+        questionPair.add(List.of("Question 2: What is 6x7?", "42", "46", "48", "56"));
+        correctAnswers.add(3);
+        questionPair.add(List.of("Question 3: What is the solution to 3x+6=21?", "x=4", "x=3", "x=5", "x=6"));
+        correctAnswers.add(2);
+        questionPair.add(List.of("Question 4: What is the derivative of 2x+1?", "2x", "1", "2x^2", "2"));
+        correctAnswers.add(3);
+        questionPair.add(List.of("Question 5: What is 15x15?", "225", "205", "150", "155"));
+        correctAnswers.add(0);
+        questionPair.add(List.of("Question 6: How many degrees are in a full circle?", "180", "90", "270", "360"));
+        correctAnswers.add(3);
+        questionPair.add(List.of("Question 7: What is the value of pi rounded to two decimal places?", "3.14", "3.16", "2.34", "3.15"));
+        correctAnswers.add(0);
+        questionPair.add(List.of("Question 8: What is the square root of 81?", "27", "18", "9", "8"));
+        correctAnswers.add(2);
+        questionPair.add(List.of("Question 9: What is 21-7?", "13", "15", "12", "14"));
+        correctAnswers.add(3);
+        questionPair.add(List.of("Question 10: What is 1+1?", "4", "11", "2", "10"));
+        correctAnswers.add(2);
     }
 
     private void loadNextQuestions() {
