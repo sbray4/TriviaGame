@@ -1,3 +1,5 @@
+package brainblast;
+
 import javax.swing.WindowConstants;
 
 public class Main {
