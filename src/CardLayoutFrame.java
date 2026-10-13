@@ -1,4 +1,5 @@
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,6 +23,7 @@ public class CardLayoutFrame extends JFrame {
     private JButton startButton;
     private JButton usernameButton;
     private JButton playButton;
+    private JButton playAgainButton;
     private JButton nextButton;
     private JPanel welcomePanel;
     private JPanel usernamePanel;
@@ -36,10 +38,12 @@ public class CardLayoutFrame extends JFrame {
     private List<List<String>> questionPair;
     private List<Integer> correctAnswers;
     private int correctCount = 0;
+    private JComboBox<QuestionCategory> categoryBox;
+    private QuestionCategory selectedCategory = QuestionCategory.Sports; // Default value
 
     public CardLayoutFrame() {
         currentQuestionIdx = 0;
-        importQuestions();
+        //importQuestions(); // do later because it relies on the selected category
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         //Welcoming Page
@@ -49,15 +53,23 @@ public class CardLayoutFrame extends JFrame {
         //Game page
         createGamePanel();
         //Results screen
-        // CreateResultsPanel();
+        // CreateResultsPanel(); // do later because it depends on the questions being added already
+        // Instantiate playAgainButton here so it's not null when adding ActionListener
+        playAgainButton = new JButton("Play Again!");
         //Event handler registration
         ButtonHandler handler = new ButtonHandler();
         startButton.addActionListener(handler);
         nextButton.addActionListener(handler);
         playButton.addActionListener(handler);
         usernameButton.addActionListener(handler);
+        playAgainButton.addActionListener(handler);
         //add all panels to cardPanel
         add(cardPanel);
+    }
+
+    private enum QuestionCategory {
+        Sports,
+        Math,
     }
 
     private void createUsernamePanel() {
@@ -84,15 +96,28 @@ public class CardLayoutFrame extends JFrame {
         playButton = new JButton("Play!"); // add a button to the inner play button panel
         buttonPanel.add(playButton);
         usernamePanel.add(buttonPanel, BorderLayout.SOUTH); // add the inner panel to main panel
+
+        //4. question category dropdown
+        JPanel categoryPanel = new JPanel(new FlowLayout());
+        categoryBox = new JComboBox<>(QuestionCategory.values());
+        categoryPanel.add(categoryBox);
+        usernamePanel.add(categoryPanel, BorderLayout.CENTER);
+
         cardPanel.add(usernamePanel, "U");
     }
 
     private void CreateResultsPanel() {
-        resultPanel = new JPanel(new GridLayout(2, 1));
+        resultPanel = new JPanel(new GridLayout(3, 1));
 
         resultPanel.add(new JLabel("Results Screen - " + username, SwingConstants.CENTER));
         resultPanel.add(new JLabel( "You got " + correctCount + " out of " + questionPair.size() + " correct!", SwingConstants.CENTER));
         cardPanel.add(resultPanel, "R");
+
+        // Play again button
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        //playAgainButton = new JButton("Play Again!"); // need to instantiate earlier
+        buttonPanel.add(playAgainButton);
+        resultPanel.add(buttonPanel); // add the inner panel to main panel
     }
 
     private void createGamePanel() {
@@ -130,6 +155,10 @@ public class CardLayoutFrame extends JFrame {
             if (e.getSource() == startButton) {
                 cardLayout.show(cardPanel, "U");
             } else if (e.getSource() == playButton) {
+                selectedCategory = (QuestionCategory) categoryBox.getSelectedItem();
+
+                // Load questions
+                importQuestions();
                 loadNextQuestions();
                 cardLayout.show(cardPanel, "G");
             } else if (e.getSource() == nextButton) {
@@ -139,6 +168,13 @@ public class CardLayoutFrame extends JFrame {
             } else if (e.getSource() == usernameButton) {
                 username = inputField.getText();
                 JOptionPane.showMessageDialog(null, "Welcome " + username + "!");
+            } else if (e.getSource() == playAgainButton) {
+                // Reset questions
+                currentQuestionIdx = 0;
+                correctCount = 0;
+                clearQuestions();
+
+                cardLayout.show(cardPanel, "U");
             }
         }
     }
@@ -171,50 +207,61 @@ public class CardLayoutFrame extends JFrame {
         }
     }
 
+    private void clearQuestions() {
+        if (questionPair != null) questionPair.clear();
+        if (correctAnswers != null) correctAnswers.clear();
+    }
+
     private void importQuestions() {
         questionPair = new ArrayList<>();
         correctAnswers = new ArrayList<>();
-        questionPair.add(List.of("Question 1: Which country won the 2026 FIFA World Cup?", "Spain", "Argentina", "Brazil", "France"));
-        correctAnswers.add(0);
-        questionPair.add(List.of("Question 2: How many players make up a basketball team?", "10", "4", "7", "5"));
-        correctAnswers.add(3);
-        questionPair.add(List.of("Question 3: How long is a marathon?", "24.2 miles", "26.2 miles", "20 miles", "25 miles"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Question 4: Who won the baseball World Series in 2025?", "Toronto Blue Jays", "New York Yankees", "Los Angeles Dodgers", "Texas Rangers"));
-        correctAnswers.add(2);
-        questionPair.add(List.of("Question 5: In American football, how many points is a field goal worth?", "7", "6", "10", "5"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Question 6: How many holes are played in a standard round of golf?", "9", "12", "18", "24"));
-        correctAnswers.add(2);
-        questionPair.add(List.of("Question 7: How many players are on a volleyball team?", "6", "4", "8", "5"));
-        correctAnswers.add(0);
-        questionPair.add(List.of("Question 8: Who has the most amount of gold medals in the Olympics?", "Lebron James", "Usain Bolt", "Lionel Messi", "Michael Phelps"));
-        correctAnswers.add(3);
-        questionPair.add(List.of("Question 9: How many outs are there in baseball?", "3", "1", "4", "5"));
-        correctAnswers.add(0);
-        questionPair.add(List.of("Question 10: How long is a soccer game in minutes", "60", "120", "90", "100"));
-        correctAnswers.add(2);
 
-        questionPair.add(List.of("Question 1: What is 12x12?", "12", "144", "122", "132"));
-        correctAnswers.add(1);
-        questionPair.add(List.of("Question 2: What is 6x7?", "42", "46", "48", "56"));
-        correctAnswers.add(0);
-        questionPair.add(List.of("Question 3: What is the solution to 3x+6=21?", "x=4", "x=3", "x=5", "x=6"));
-        correctAnswers.add(2);
-        questionPair.add(List.of("Question 4: What is the derivative of 2x+1?", "2x", "1", "2x^2", "2"));
-        correctAnswers.add(3);
-        questionPair.add(List.of("Question 5: What is 15x15?", "225", "205", "150", "155"));
-        correctAnswers.add(0);
-        questionPair.add(List.of("Question 6: How many degrees are in a full circle?", "180", "90", "270", "360"));
-        correctAnswers.add(3);
-        questionPair.add(List.of("Question 7: What is the value of pi rounded to two decimal places?", "3.14", "3.16", "2.34", "3.15"));
-        correctAnswers.add(0);
-        questionPair.add(List.of("Question 8: What is the square root of 81?", "27", "18", "9", "8"));
-        correctAnswers.add(2);
-        questionPair.add(List.of("Question 9: What is 21-7?", "13", "15", "12", "14"));
-        correctAnswers.add(3);
-        questionPair.add(List.of("Question 10: What is 1+1?", "4", "11", "2", "10"));
-        correctAnswers.add(2);
+        switch (selectedCategory) {
+            case Sports:
+                questionPair.add(List.of("Question 1: Which country won the 2026 FIFA World Cup?", "Spain", "Argentina", "Brazil", "France"));
+                correctAnswers.add(0);
+                questionPair.add(List.of("Question 2: How many players make up a basketball team?", "10", "4", "7", "5"));
+                correctAnswers.add(3);
+                questionPair.add(List.of("Question 3: How long is a marathon?", "24.2 miles", "26.2 miles", "20 miles", "25 miles"));
+                correctAnswers.add(1);
+                questionPair.add(List.of("Question 4: Who won the baseball World Series in 2025?", "Toronto Blue Jays", "New York Yankees", "Los Angeles Dodgers", "Texas Rangers"));
+                correctAnswers.add(2);
+                questionPair.add(List.of("Question 5: In American football, how many points is a field goal worth?", "7", "6", "10", "5"));
+                correctAnswers.add(1);
+                questionPair.add(List.of("Question 6: How many holes are played in a standard round of golf?", "9", "12", "18", "24"));
+                correctAnswers.add(2);
+                questionPair.add(List.of("Question 7: How many players are on a volleyball team?", "6", "4", "8", "5"));
+                correctAnswers.add(0);
+                questionPair.add(List.of("Question 8: Who has the most amount of gold medals in the Olympics?", "Lebron James", "Usain Bolt", "Lionel Messi", "Michael Phelps"));
+                correctAnswers.add(3);
+                questionPair.add(List.of("Question 9: How many outs are there in baseball?", "3", "1", "4", "5"));
+                correctAnswers.add(0);
+                questionPair.add(List.of("Question 10: How long is a soccer game in minutes", "60", "120", "90", "100"));
+                correctAnswers.add(2);
+                break;
+            case Math:
+                questionPair.add(List.of("Question 1: What is 12x12?", "12", "144", "122", "132"));
+                correctAnswers.add(1);
+                questionPair.add(List.of("Question 2: What is 6x7?", "42", "46", "48", "56"));
+                correctAnswers.add(0);
+                questionPair.add(List.of("Question 3: What is the solution to 3x+6=21?", "x=4", "x=3", "x=5", "x=6"));
+                correctAnswers.add(2);
+                questionPair.add(List.of("Question 4: What is the derivative of 2x+1?", "2x", "1", "2x^2", "2"));
+                correctAnswers.add(3);
+                questionPair.add(List.of("Question 5: What is 15x15?", "225", "205", "150", "155"));
+                correctAnswers.add(0);
+                questionPair.add(List.of("Question 6: How many degrees are in a full circle?", "180", "90", "270", "360"));
+                correctAnswers.add(3);
+                questionPair.add(List.of("Question 7: What is the value of pi rounded to two decimal places?", "3.14", "3.16", "2.34", "3.15"));
+                correctAnswers.add(0);
+                questionPair.add(List.of("Question 8: What is the square root of 81?", "27", "18", "9", "8"));
+                correctAnswers.add(2);
+                questionPair.add(List.of("Question 9: What is 21-7?", "13", "15", "12", "14"));
+                correctAnswers.add(3);
+                questionPair.add(List.of("Question 10: What is 1+1?", "4", "11", "2", "10"));
+                correctAnswers.add(2);
+                break;
+        }
     }
 
     private void loadNextQuestions() {
