@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
@@ -24,7 +25,7 @@ public class CardLayoutFrame extends JFrame {
     private JButton usernameButton;
     private JButton playButton;
     private JButton playAgainButton;
-    private JButton nextButton;
+//    private JButton nextButton; // don't need anymore
     private JPanel welcomePanel;
     private JPanel usernamePanel;
     private JPanel gamePanel;
@@ -40,6 +41,10 @@ public class CardLayoutFrame extends JFrame {
     private int correctCount = 0;
     private JComboBox<QuestionCategory> categoryBox;
     private QuestionCategory selectedCategory = QuestionCategory.Sports; // Default value
+    private Timer questionTimer;
+    private JLabel timerLabel;
+    private int timeLeft;
+    private TimerHandler timerHandler;
 
     public CardLayoutFrame() {
         currentQuestionIdx = 0;
@@ -59,10 +64,11 @@ public class CardLayoutFrame extends JFrame {
         //Event handler registration
         ButtonHandler handler = new ButtonHandler();
         startButton.addActionListener(handler);
-        nextButton.addActionListener(handler);
+//        nextButton.addActionListener(handler);
         playButton.addActionListener(handler);
         usernameButton.addActionListener(handler);
         playAgainButton.addActionListener(handler);
+        timerHandler = new TimerHandler();
         //add all panels to cardPanel
         add(cardPanel);
     }
@@ -79,14 +85,7 @@ public class CardLayoutFrame extends JFrame {
         JPanel usernameButtonPanel = new JPanel(new FlowLayout());
         inputField = new JTextField("Enter a username"); // add an inputField to the inner panel
         inputField.setFont(new Font("Arial", Font.PLAIN, 20));
-        inputField.addFocusListener(new FocusAdapter() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (inputField.getText().equals("Enter a username")) {
-                    inputField.setText("");
-                }
-            }
-        });
+        inputField.addFocusListener(new UsernameFocusAdapter());
         usernameButtonPanel.add(inputField);
         usernameButton = new JButton("Save the name"); // add a button to the inner panel
         usernameButtonPanel.add(usernameButton);
@@ -107,6 +106,13 @@ public class CardLayoutFrame extends JFrame {
     }
 
     private void CreateResultsPanel() {
+        stopQuestionTimer();
+
+        // Remove old resultPanel
+        if (resultPanel != null) {
+            cardPanel.remove(resultPanel);
+        }
+
         resultPanel = new JPanel(new GridLayout(3, 1));
 
         resultPanel.add(new JLabel("Results Screen - " + username, SwingConstants.CENTER));
@@ -126,8 +132,8 @@ public class CardLayoutFrame extends JFrame {
         questionLabel.setFont(new Font("Arial", Font.BOLD, 20));
         gamePanel.add(questionLabel, BorderLayout.NORTH);
         // gamePanel.add(new JLabel("Quiz Screen"));
-        nextButton = new JButton("Go to results");
-        gamePanel.add(nextButton, BorderLayout.SOUTH);
+//         nextButton = new JButton("Go to results");
+//         gamePanel.add(nextButton, BorderLayout.SOUTH);
         JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         for (int i = 0; i < 4; i++) {
             optionButtons[i] = new JButton("Option " + (i + 1));
@@ -136,6 +142,11 @@ public class CardLayoutFrame extends JFrame {
         }
         gamePanel.add(buttonPanel, BorderLayout.CENTER);
         cardPanel.add(gamePanel, "G");
+
+        timerLabel = new JLabel("", SwingConstants.CENTER);
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+
+        gamePanel.add(timerLabel, BorderLayout.SOUTH);
     }
 
     private void createWelcomePanel() {
@@ -161,10 +172,10 @@ public class CardLayoutFrame extends JFrame {
                 importQuestions();
                 loadNextQuestions();
                 cardLayout.show(cardPanel, "G");
-            } else if (e.getSource() == nextButton) {
-                //Results screen
-                CreateResultsPanel();
-                cardLayout.show(cardPanel, "R");
+//            } else if (e.getSource() == nextButton) {
+//                //Results screen
+//                CreateResultsPanel();
+//                cardLayout.show(cardPanel, "R");
             } else if (e.getSource() == usernameButton) {
                 username = inputField.getText();
                 JOptionPane.showMessageDialog(null, "Welcome " + username + "!");
@@ -179,6 +190,43 @@ public class CardLayoutFrame extends JFrame {
         }
     }
 
+    private class TimerHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            timeLeft--;
+            timerLabel.setText("Time: " + timeLeft);
+
+            if (timeLeft <= 0) {
+                // -1 means the player didn't choose an answer
+                processAnswer(-1);
+            }
+        }
+    }
+
+    private void processAnswer(int index) {
+        stopQuestionTimer();
+
+        int correctAnswer = correctAnswers.get(currentQuestionIdx);
+
+        if (index == -1) {
+            JOptionPane.showMessageDialog(CardLayoutFrame.this, "Time's up! Incorrect.");
+        }
+        else if (index == correctAnswer) {
+            correctCount++;
+            JOptionPane.showMessageDialog(CardLayoutFrame.this, "Correct!");
+        } else {
+            JOptionPane.showMessageDialog(CardLayoutFrame.this, "Incorrect.");
+        }
+        currentQuestionIdx++;
+
+        if (currentQuestionIdx < questionPair.size()) {
+            loadNextQuestions();
+        } else {
+            CreateResultsPanel();
+            cardLayout.show(cardPanel, "R");
+        }
+    }
+
     private class OptionButtonHandler implements ActionListener {
         private int index;
 
@@ -188,22 +236,7 @@ public class CardLayoutFrame extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            int correctAnswer = correctAnswers.get(currentQuestionIdx);
-
-            if (index == correctAnswer) {
-                correctCount++;
-                JOptionPane.showMessageDialog(CardLayoutFrame.this, "Correct!");
-            } else {
-                JOptionPane.showMessageDialog(CardLayoutFrame.this, "Incorrect.");
-            }
-            currentQuestionIdx++;
-
-            if (currentQuestionIdx < questionPair.size()) {
-                loadNextQuestions();
-            } else {
-                CreateResultsPanel();
-                cardLayout.show(cardPanel, "R");
-            }
+            processAnswer(index);
         }
     }
 
@@ -272,6 +305,37 @@ public class CardLayoutFrame extends JFrame {
         questionLabel.setText((questionPair.get(currentQuestionIdx).get(0)));
         for (int i = 0; i < 4; i++) {
             optionButtons[i].setText(questionPair.get(currentQuestionIdx).get(i + 1));
+        }
+
+        startQuestionTimer();
+    }
+
+    private class UsernameFocusAdapter extends FocusAdapter {
+        @Override
+        public void focusGained(FocusEvent e) {
+            if (inputField.getText().equals("Enter a username")) {
+                inputField.setText("");
+            }
+        }
+    }
+
+    private void startQuestionTimer() {
+        stopQuestionTimer();
+
+        // interval to update the timer in ms
+        int delay = 1000;
+
+        questionTimer = new Timer(delay, timerHandler);
+
+        timeLeft = 15;
+        timerLabel.setText("Time: " + timeLeft);
+
+        questionTimer.start();
+    }
+
+    private void stopQuestionTimer() {
+        if (questionTimer != null) {
+            questionTimer.stop();
         }
     }
 }
