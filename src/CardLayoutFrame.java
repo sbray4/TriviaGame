@@ -178,7 +178,7 @@ public class CardLayoutFrame extends JFrame {
         correctAnswers.add(2);
         questionPair.add(List.of("Question 7: How many players are on a volleyball team?", "6", "4", "8", "5"));
         correctAnswers.add(0);
-        questionPair.add(List.of("Question 8: Who has the most amount of gold medals in the Olympics?", "Lebron James", "Usain Bolt", "Lional Messi", "Michael Phelps"));
+        questionPair.add(List.of("Question 8: Who has the most amount of gold medals in the Olympics?", "Lebron James", "Usain Bolt", "Lionel Messi", "Michael Phelps"));
         correctAnswers.add(3);
         questionPair.add(List.of("Question 9: How many outs are there in baseball?", "3", "1", "4", "5"));
         correctAnswers.add(0);
