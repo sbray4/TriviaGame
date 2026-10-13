@@ -288,7 +288,7 @@ public class CardLayoutFrame extends JFrame {
                 correctAnswers.add(3);
                 questionPair.add(List.of("Question 9: How many outs are there in baseball?", "3", "1", "4", "5"));
                 correctAnswers.add(0);
-                questionPair.add(List.of("Question 10: How long is a soccer game in minutes", "60", "120", "90", "100"));
+                questionPair.add(List.of("Question 10: How long is a soccer game in minutes?", "60", "120", "90", "100"));
                 correctAnswers.add(2);
                 break;
             case Math:
