@@ -12,6 +12,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,6 +67,14 @@ public class CardLayoutFrame extends JFrame {
         JPanel usernameButtonPanel = new JPanel(new FlowLayout());
         inputField = new JTextField("Enter a username"); // add an inputField to the inner panel
         inputField.setFont(new Font("Arial", Font.PLAIN, 20));
+        inputField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (inputField.getText().equals("Enter a username")) {
+                    inputField.setText("");
+                }
+            }
+        });
         usernameButtonPanel.add(inputField);
         usernameButton = new JButton("Save the name"); // add a button to the inner panel
         usernameButtonPanel.add(usernameButton);
