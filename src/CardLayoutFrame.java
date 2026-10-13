@@ -7,8 +7,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -25,7 +27,7 @@ public class CardLayoutFrame extends JFrame {
     private JButton usernameButton;
     private JButton playButton;
     private JButton playAgainButton;
-//    private JButton nextButton; // don't need anymore
+//    private JButton nextButton; // don't need "Go to results" button anymore
     private JPanel welcomePanel;
     private JPanel usernamePanel;
     private JPanel gamePanel;
@@ -46,7 +48,14 @@ public class CardLayoutFrame extends JFrame {
     private int timeLeft;
     private TimerHandler timerHandler;
 
+    private static final Color BACKGROUND_COLOR = new Color(190, 201, 212);
+    private static final Color FOREGROUND_COLOR = new Color(242, 245, 247);
+    private static final Color BUTTON_COLOR = new Color(205, 208, 210);
+    private static final Color TEXT_COLOR = Color.BLACK;
+    private static final Color BUTTON_TEXT_COLOR = new Color(35, 42, 50);
+
     public CardLayoutFrame() {
+        applyTheme();
         currentQuestionIdx = 0;
         //importQuestions(); // do later because it relies on the selected category
         cardLayout = new CardLayout();
@@ -93,6 +102,7 @@ public class CardLayoutFrame extends JFrame {
         //3. inner play button panel
         JPanel buttonPanel = new JPanel(new FlowLayout());
         playButton = new JButton("Play!"); // add a button to the inner play button panel
+        playButton.setFont(new Font("Arial", Font.BOLD, 36));
         buttonPanel.add(playButton);
         usernamePanel.add(buttonPanel, BorderLayout.SOUTH); // add the inner panel to main panel
 
@@ -115,7 +125,7 @@ public class CardLayoutFrame extends JFrame {
 
         resultPanel = new JPanel(new GridLayout(3, 1));
 
-        resultPanel.add(new JLabel("Results Screen - " + username, SwingConstants.CENTER));
+        resultPanel.add(new JLabel("Results - " + username, SwingConstants.CENTER));
         resultPanel.add(new JLabel( "You got " + correctCount + " out of " + questionPair.size() + " correct!", SwingConstants.CENTER));
         cardPanel.add(resultPanel, "R");
 
@@ -151,9 +161,18 @@ public class CardLayoutFrame extends JFrame {
 
     private void createWelcomePanel() {
         welcomePanel = new JPanel(new BorderLayout());
-        JLabel title = new JLabel("Welcome Screen", SwingConstants.CENTER);
-        title.setFont(new Font("Arial", Font.BOLD, 50));
-        welcomePanel.add(title, BorderLayout.CENTER);
+
+        JPanel titlePanel = new JPanel(new GridLayout(2, 1));
+
+        JLabel title = new JLabel("Brainblast Triva ", SwingConstants.CENTER);
+        title.setFont(new Font("Arial", Font.BOLD, 75));
+        titlePanel.add(title);
+
+        JLabel subtitle = new JLabel("It's your brain against the clock!", SwingConstants.CENTER);
+        subtitle.setFont(new Font("Arial", Font.PLAIN, 32));
+        titlePanel.add(subtitle);
+
+        welcomePanel.add(titlePanel, BorderLayout.CENTER);
         startButton = new JButton("Start game!");
         startButton.setFont(new Font("Arial", Font.BOLD, 50));
         welcomePanel.add(startButton, BorderLayout.SOUTH);
@@ -337,5 +356,27 @@ public class CardLayoutFrame extends JFrame {
         if (questionTimer != null) {
             questionTimer.stop();
         }
+    }
+
+    private void applyTheme() {
+        // JPanel colors
+        UIManager.put("Panel.background", BACKGROUND_COLOR);
+
+        // JButton colors
+        UIManager.put("Button.background", BUTTON_COLOR);
+        UIManager.put("Button.foreground", BUTTON_TEXT_COLOR);
+
+        // JLabel colors
+        UIManager.put("Label.foreground", TEXT_COLOR);
+
+        // JTextField colors
+        UIManager.put("TextField.background", FOREGROUND_COLOR);
+        UIManager.put("TextField.foreground", TEXT_COLOR);
+
+        // JOptionPane colors
+        UIManager.put("OptionPane.background", BACKGROUND_COLOR);
+        UIManager.put("OptionPane.messageForeground", TEXT_COLOR);
+        UIManager.put("OptionPane.buttonBackground", BUTTON_COLOR);
+        UIManager.put("OptionPane.buttonForeground", BUTTON_TEXT_COLOR);
     }
 }
